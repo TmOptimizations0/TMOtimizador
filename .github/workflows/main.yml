@@ -13,472 +13,125 @@ jobs:
       - name: Gerar arquivos do projeto
         run: |
           set -e
-          mkdir -p "$(dirname 'settings.gradle.kts')"
-          cat > 'settings.gradle.kts' <<'TM_FIM_1'
-          pluginManagement {
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
+          base64 -d <<'TM_FIM' | tar xz
+          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
+          TM_FIM
 
-          dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-          rootProject.name = "TMOtimizador"
-          include(":app")
-          TM_FIM_1
-          mkdir -p "$(dirname 'build.gradle.kts')"
-          cat > 'build.gradle.kts' <<'TM_FIM_2'
-          plugins {
-              id("com.android.application") version "8.5.2" apply false
-              id("org.jetbrains.kotlin.android") version "1.9.24" apply false
-          }
-          TM_FIM_2
-          mkdir -p "$(dirname 'gradle.properties')"
-          cat > 'gradle.properties' <<'TM_FIM_3'
-          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
-          android.useAndroidX=true
-          android.nonTransitiveRClass=true
-          kotlin.code.style=official
-          TM_FIM_3
-          mkdir -p "$(dirname 'app/build.gradle.kts')"
-          cat > 'app/build.gradle.kts' <<'TM_FIM_4'
-          plugins {
-              id("com.android.application")
-              id("org.jetbrains.kotlin.android")
-          }
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
-          android {
-              namespace = "com.tm.otimizador"
-              compileSdk = 34
+      - name: Compilar APK
+        run: gradle assembleDebug --no-daemon --stacktrace
 
-              defaultConfig {
-                  applicationId = "com.tm.otimizador"
-                  minSdk = 24
-                  targetSdk = 34
-                  versionCode = 1
-                  versionName = "1.0.0"
-              }
-
-              buildTypes {
-                  release {
-                      isMinifyEnabled = false
-                  }
-              }
-
-              compileOptions {
-                  sourceCompatibility = JavaVersion.VERSION_17
-                  targetCompatibility = JavaVersion.VERSION_17
-              }
-
-              kotlinOptions {
-                  jvmTarget = "17"
-              }
-          }
-
-          dependencies {
-              implementation("dev.rikka.shizuku:api:13.1.5")
-              implementation("dev.rikka.shizuku:provider:13.1.5")
-          }
-          TM_FIM_4
-          mkdir -p "$(dirname 'app/src/main/AndroidManifest.xml')"
-          cat > 'app/src/main/AndroidManifest.xml' <<'TM_FIM_5'
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-              <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
-
-              <queries>
-                  <package android:name="moe.shizuku.privileged.api" />
-              </queries>
-
-              <application
-                  android:allowBackup="false"
-                  android:icon="@drawable/ic_launcher"
-                  android:label="TM Otimizador"
-                  android:theme="@android:style/Theme.Material.NoActionBar">
-
-                  <provider
-                      android:name="rikka.shizuku.ShizukuProvider"
-                      android:authorities="${applicationId}.shizuku"
-                      android:enabled="true"
-                      android:exported="true"
-                      android:multiprocess="false"
-                      android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
-
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN" />
-                          <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>
-          TM_FIM_5
-          mkdir -p "$(dirname 'app/src/main/res/drawable/ic_launcher.xml')"
-          cat > 'app/src/main/res/drawable/ic_launcher.xml' <<'TM_FIM_6'
-          <?xml version="1.0" encoding="utf-8"?>
-          <vector xmlns:android="http://schemas.android.com/apk/res/android"
-              android:width="108dp"
-              android:height="108dp"
-              android:viewportWidth="108"
-              android:viewportHeight="108">
-              <path
-                  android:fillColor="#0F172A"
-                  android:pathData="M0,0h108v108h-108z" />
-              <path
-                  android:fillColor="#22D3EE"
-                  android:pathData="M60,18 L36,60 L52,60 L46,90 L72,46 L55,46 Z" />
-          </vector>
-          TM_FIM_6
-          mkdir -p "$(dirname 'app/src/main/java/com/tm/otimizador/Optimizations.kt')"
-          cat > 'app/src/main/java/com/tm/otimizador/Optimizations.kt' <<'TM_FIM_7'
-          package com.tm.otimizador
-
-          /**
-           * Uma otimização com comandos para ATIVAR e para DESATIVAR (voltar ao padrão).
-           * check/expect: comando que lê o estado real do aparelho e o valor esperado quando está ativada.
-           * heavy: demora (fica fora do "Ativar tudo / Restaurar tudo").
-           */
-          data class Opt(
-              val id: String,
-              val title: String,
-              val desc: String,
-              val on: List<String>,
-              val off: List<String>,
-              val check: String? = null,
-              val expect: String? = null,
-              val heavy: Boolean = false
-          )
-
-          val OPTS = listOf(
-              Opt(
-                  id = "anim",
-                  title = "Animações rápidas (0.5x)",
-                  desc = "Deixa as transições do sistema mais ágeis. Desativar volta para 1.0x.",
-                  on = listOf(
-                      "settings put global window_animation_scale 0.5",
-                      "settings put global transition_animation_scale 0.5",
-                      "settings put global animator_duration_scale 0.5"
-                  ),
-                  off = listOf(
-                      "settings put global window_animation_scale 1.0",
-                      "settings put global transition_animation_scale 1.0",
-                      "settings put global animator_duration_scale 1.0"
-                  ),
-                  check = "settings get global window_animation_scale",
-                  expect = "0.5"
-              ),
-              Opt(
-                  id = "scan",
-                  title = "Sem varredura em segundo plano",
-                  desc = "Desliga a busca constante por redes Wi-Fi e dispositivos Bluetooth. Desativar religa.",
-                  on = listOf(
-                      "settings put global wifi_scan_always_enabled 0",
-                      "settings put global ble_scan_always_enabled 0"
-                  ),
-                  off = listOf(
-                      "settings put global wifi_scan_always_enabled 1",
-                      "settings put global ble_scan_always_enabled 1"
-                  ),
-                  check = "settings get global wifi_scan_always_enabled",
-                  expect = "0"
-              ),
-              Opt(
-                  id = "dns",
-                  title = "DNS privado (dns.google)",
-                  desc = "Usa DNS privado com dns.google. Desativar volta para o modo Automático.",
-                  on = listOf(
-                      "settings put global private_dns_mode hostname",
-                      "settings put global private_dns_specifier dns.google"
-                  ),
-                  off = listOf(
-                      "settings put global private_dns_mode opportunistic"
-                  ),
-                  check = "settings get global private_dns_mode",
-                  expect = "hostname"
-              ),
-              Opt(
-                  id = "refresh",
-                  title = "Forçar taxa de atualização de 90Hz",
-                  desc = "Só funciona em telas de 90Hz e pode variar conforme a marca. Desativar remove o ajuste.",
-                  on = listOf(
-                      "settings put system min_refresh_rate 90.0",
-                      "settings put system peak_refresh_rate 90.0"
-                  ),
-                  off = listOf(
-                      "settings delete system min_refresh_rate",
-                      "settings delete system peak_refresh_rate"
-                  ),
-                  check = "settings get system min_refresh_rate",
-                  expect = "90.0"
-              ),
-              Opt(
-                  id = "compile",
-                  title = "Compilar apps (speed-profile)",
-                  desc = "Pré-compila os apps para abrirem mais rápido. Demora alguns minutos. Desativar restaura a compilação padrão.",
-                  on = listOf("cmd package compile -m speed-profile -a"),
-                  off = listOf("cmd package compile --reset -a"),
-                  heavy = true
-              )
-          )
-          TM_FIM_7
-          mkdir -p "$(dirname 'app/src/main/java/com/tm/otimizador/MainActivity.kt')"
-          cat > 'app/src/main/java/com/tm/otimizador/MainActivity.kt' <<'TM_FIM_8'
-          package com.tm.otimizador
-
-          import android.app.Activity
-          import android.content.pm.PackageManager
-          import android.graphics.Color
-          import android.graphics.Typeface
-          import android.graphics.drawable.GradientDrawable
-          import android.os.Bundle
-          import android.os.Handler
-          import android.os.Looper
-          import android.view.Gravity
-          import android.view.ViewGroup
-          import android.widget.Button
-          import android.widget.LinearLayout
-          import android.widget.ScrollView
-          import android.widget.Switch
-          import android.widget.TextView
-          import android.widget.Toast
-          import java.util.concurrent.Executors
-          import rikka.shizuku.Shizuku
-
-          class MainActivity : Activity() {
-
-              private val ui = Handler(Looper.getMainLooper())
-              private val worker = Executors.newSingleThreadExecutor()
-              private val prefs by lazy { getSharedPreferences("opts", MODE_PRIVATE) }
-
-              private val switches = LinkedHashMap<String, Switch>()
-              private val actionButtons = ArrayList<Button>()
-              private lateinit var status: TextView
-              private lateinit var permButton: Button
-              private lateinit var logView: TextView
-
-              private var suppress = false
-              private var connected = false
-
-              private val binderReceived = Shizuku.OnBinderReceivedListener { ui.post { refreshState() } }
-              private val binderDead = Shizuku.OnBinderDeadListener { ui.post { refreshState() } }
-              private val permResult = Shizuku.OnRequestPermissionResultListener { _, _ -> ui.post { refreshState() } }
-
-              // ---------------------------------------------------------------- ciclo de vida
-
-              override fun onCreate(savedInstanceState: Bundle?) {
-                  super.onCreate(savedInstanceState)
-                  window.statusBarColor = Color.parseColor("#0F172A")
-                  window.navigationBarColor = Color.parseColor("#0F172A")
-                  buildUi()
-                  Shizuku.addBinderReceivedListenerSticky(binderReceived)
-                  Shizuku.addBinderDeadListener(binderDead)
-                  Shizuku.addRequestPermissionResultListener(permResult)
-              }
-
-              override fun onResume() {
-                  super.onResume()
-                  refreshState()
-              }
-
-              override fun onDestroy() {
-                  Shizuku.removeBinderReceivedListener(binderReceived)
-                  Shizuku.removeBinderDeadListener(binderDead)
-                  Shizuku.removeRequestPermissionResultListener(permResult)
-                  worker.shutdown()
-                  super.onDestroy()
-              }
-
-              // ---------------------------------------------------------------- Shizuku
-
-              private fun running(): Boolean {
-                  return try {
-                      Shizuku.pingBinder()
-                  } catch (t: Throwable) {
-                      false
-                  }
-              }
-
-              private fun granted(): Boolean {
-                  if (!running()) return false
-                  return try {
-                      Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
-                  } catch (t: Throwable) {
-                      false
-                  }
-              }
-
-              private fun onPermClick() {
-                  if (!running()) {
-                      val intent = packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
-                      if (intent != null) {
-                          startActivity(intent)
-                      } else {
-                          toast("Shizuku não está instalado. Instale e inicie o serviço.")
-                      }
-                      return
-                  }
-                  try {
-                      if (Shizuku.shouldShowRequestPermissionRationale()) {
-                          toast("Permissão negada. Libere o TM Otimizador dentro do app Shizuku.")
-                      } else {
-                          Shizuku.requestPermission(1001)
-                      }
-                  } catch (t: Throwable) {
-                      toast("Erro ao pedir permissão: ${t.message}")
-                  }
-              }
-
-              /** Executa um comando de shell com a permissão do Shizuku. Retorna (código, saída). */
-              private fun exec(cmd: String): Pair<Int, String> {
-                  return try {
-                      val m = Shizuku::class.java.getDeclaredMethod(
-                          "newProcess",
-                          Array<String>::class.java,
-                          Array<String>::class.java,
-                          String::class.java
-                      )
-                      m.isAccessible = true
-                      val p = m.invoke(null, arrayOf("sh", "-c", "($cmd) 2>&1"), null, null) as Process
-                      val out = p.inputStream.bufferedReader().readText()
-                      val code = p.waitFor()
-                      Pair(code, out.trim())
-                  } catch (t: Throwable) {
-                      Pair(-1, t.cause?.message ?: t.message ?: t.toString())
-                  }
-              }
-
-              // ---------------------------------------------------------------- estado
-
-              private fun refreshState() {
-                  val run = running()
-                  connected = granted()
-                  when {
-                      !run -> {
-                          status.text = "Shizuku não está em execução"
-                          status.setTextColor(Color.parseColor("#FBBF24"))
-                          permButton.text = "Abrir o Shizuku"
-                          permButton.isEnabled = true
-                      }
-                      !connected -> {
-                          status.text = "Shizuku ativo, falta a permissão"
-                          status.setTextColor(Color.parseColor("#FBBF24"))
-                          permButton.text = "Conceder permissão"
-                          permButton.isEnabled = true
-                      }
-                      else -> {
-                          status.text = "Shizuku conectado ✔"
-                          status.setTextColor(Color.parseColor("#34D399"))
-                          permButton.text = "Conectado"
-                          permButton.isEnabled = false
-                      }
-                  }
-                  permButton.alpha = if (permButton.isEnabled) 1f else 0.4f
-                  setBusy(false)
-                  if (connected) syncStates()
-              }
-
-              /** Lê o estado real de cada otimização no aparelho e ajusta as chaves. */
-              private fun syncStates() {
-                  worker.execute {
-                      for (opt in OPTS) {
-                          val saved = prefs.getBoolean(opt.id, false)
-                          val chk = opt.check
-                          var state = saved
-                          if (chk != null) {
-                              val r = exec(chk)
-                              if (r.first == 0) state = (r.second.trim() == opt.expect)
-                          }
-                          ui.post { setSwitch(opt.id, state) }
-                      }
-                  }
-              }
-
-              private fun setSwitch(id: String, value: Boolean) {
-                  val s = switches[id] ?: return
-                  suppress = true
-                  s.isChecked = value
-                  suppress = false
-              }
-
-              private fun setBusy(busy: Boolean) {
-                  val enabled = !busy && connected
-                  for (s in switches.values) s.isEnabled = enabled
-                  for (b in actionButtons) {
-                      b.isEnabled = enabled
-                      b.alpha = if (enabled) 1f else 0.4f
-                  }
-              }
-
-              // ---------------------------------------------------------------- ações
-
-              /** Roda uma otimização (bloqueante, chamar fora da thread de UI). */
-              private fun runOpt(opt: Opt, enable: Boolean): Boolean {
-                  log((if (enable) "Ativando" else "Desativando") + ": " + opt.title + "…")
-                  val cmds = if (enable) opt.on else opt.off
-                  val r = exec(cmds.joinToString(" && "))
-                  return if (r.first == 0) {
-                      prefs.edit().putBoolean(opt.id, enable).apply()
-                      log("✔ pronto" + snip(r.second))
-                      true
-                  } else {
-                      log("✘ erro (" + r.first + "): " + r.second)
-                      false
-                  }
-              }
-
-              private fun onToggle(opt: Opt, checked: Boolean) {
-                  if (suppress) return
-                  if (!connected) {
-                      setSwitch(opt.id, !checked)
-                      toast("Conecte o Shizuku primeiro")
-                      return
-                  }
-                  setBusy(true)
-                  worker.execute {
-                      val ok = runOpt(opt, checked)
-                      ui.post {
-                          if (!ok) setSwitch(opt.id, !checked)
-                          setBusy(false)
-                      }
-                  }
-              }
-
-              private fun bulk(enable: Boolean) {
-                  if (!connected) {
-                      toast("Conecte o Shizuku primeiro")
-                      return
-                  }
-                  setBusy(true)
-                  worker.execute {
-                      for (opt in OPTS) {
-                          if (opt.heavy) continue
-                          val ok = runOpt(opt, enable)
-                          if (ok) ui.post { setSwitch(opt.id, enable) }
-                      }
-                      ui.post { setBusy(false) }
-                  }
-              }
-
-              private fun runAction(label: String, cmd: String) {
-                  if (!connected) {
-                      toast("Conecte o Shizuku primeiro")
-                      return
-                  }
-                  setBusy(true)
-                  worker.execute {
-                      log("$label…")
-                      val r = exec(cmd)
-                      if (r.first == 0) log("✔ concluído" + snip(r.second)) else log("✘ erro (" + r.first + "): " + r.second)
-                      ui.post { setBusy(false) }
-                  }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TM-Otimizador-APK
+          path: app/build/outputs/apk/debug/*.apk
+          
