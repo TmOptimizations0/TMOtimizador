@@ -1,0 +1,484 @@
+name: Compilar APK
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gerar arquivos do projeto
+        run: |
+          set -e
+          mkdir -p "$(dirname 'settings.gradle.kts')"
+          cat > 'settings.gradle.kts' <<'TM_FIM_1'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+
+          rootProject.name = "TMOtimizador"
+          include(":app")
+          TM_FIM_1
+          mkdir -p "$(dirname 'build.gradle.kts')"
+          cat > 'build.gradle.kts' <<'TM_FIM_2'
+          plugins {
+              id("com.android.application") version "8.5.2" apply false
+              id("org.jetbrains.kotlin.android") version "1.9.24" apply false
+          }
+          TM_FIM_2
+          mkdir -p "$(dirname 'gradle.properties')"
+          cat > 'gradle.properties' <<'TM_FIM_3'
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          android.useAndroidX=true
+          android.nonTransitiveRClass=true
+          kotlin.code.style=official
+          TM_FIM_3
+          mkdir -p "$(dirname 'app/build.gradle.kts')"
+          cat > 'app/build.gradle.kts' <<'TM_FIM_4'
+          plugins {
+              id("com.android.application")
+              id("org.jetbrains.kotlin.android")
+          }
+
+          android {
+              namespace = "com.tm.otimizador"
+              compileSdk = 34
+
+              defaultConfig {
+                  applicationId = "com.tm.otimizador"
+                  minSdk = 24
+                  targetSdk = 34
+                  versionCode = 1
+                  versionName = "1.0.0"
+              }
+
+              buildTypes {
+                  release {
+                      isMinifyEnabled = false
+                  }
+              }
+
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          }
+
+          dependencies {
+              implementation("dev.rikka.shizuku:api:13.1.5")
+              implementation("dev.rikka.shizuku:provider:13.1.5")
+          }
+          TM_FIM_4
+          mkdir -p "$(dirname 'app/src/main/AndroidManifest.xml')"
+          cat > 'app/src/main/AndroidManifest.xml' <<'TM_FIM_5'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+              <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+
+              <queries>
+                  <package android:name="moe.shizuku.privileged.api" />
+              </queries>
+
+              <application
+                  android:allowBackup="false"
+                  android:icon="@drawable/ic_launcher"
+                  android:label="TM Otimizador"
+                  android:theme="@android:style/Theme.Material.NoActionBar">
+
+                  <provider
+                      android:name="rikka.shizuku.ShizukuProvider"
+                      android:authorities="${applicationId}.shizuku"
+                      android:enabled="true"
+                      android:exported="true"
+                      android:multiprocess="false"
+                      android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          TM_FIM_5
+          mkdir -p "$(dirname 'app/src/main/res/drawable/ic_launcher.xml')"
+          cat > 'app/src/main/res/drawable/ic_launcher.xml' <<'TM_FIM_6'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="108"
+              android:viewportHeight="108">
+              <path
+                  android:fillColor="#0F172A"
+                  android:pathData="M0,0h108v108h-108z" />
+              <path
+                  android:fillColor="#22D3EE"
+                  android:pathData="M60,18 L36,60 L52,60 L46,90 L72,46 L55,46 Z" />
+          </vector>
+          TM_FIM_6
+          mkdir -p "$(dirname 'app/src/main/java/com/tm/otimizador/Optimizations.kt')"
+          cat > 'app/src/main/java/com/tm/otimizador/Optimizations.kt' <<'TM_FIM_7'
+          package com.tm.otimizador
+
+          /**
+           * Uma otimização com comandos para ATIVAR e para DESATIVAR (voltar ao padrão).
+           * check/expect: comando que lê o estado real do aparelho e o valor esperado quando está ativada.
+           * heavy: demora (fica fora do "Ativar tudo / Restaurar tudo").
+           */
+          data class Opt(
+              val id: String,
+              val title: String,
+              val desc: String,
+              val on: List<String>,
+              val off: List<String>,
+              val check: String? = null,
+              val expect: String? = null,
+              val heavy: Boolean = false
+          )
+
+          val OPTS = listOf(
+              Opt(
+                  id = "anim",
+                  title = "Animações rápidas (0.5x)",
+                  desc = "Deixa as transições do sistema mais ágeis. Desativar volta para 1.0x.",
+                  on = listOf(
+                      "settings put global window_animation_scale 0.5",
+                      "settings put global transition_animation_scale 0.5",
+                      "settings put global animator_duration_scale 0.5"
+                  ),
+                  off = listOf(
+                      "settings put global window_animation_scale 1.0",
+                      "settings put global transition_animation_scale 1.0",
+                      "settings put global animator_duration_scale 1.0"
+                  ),
+                  check = "settings get global window_animation_scale",
+                  expect = "0.5"
+              ),
+              Opt(
+                  id = "scan",
+                  title = "Sem varredura em segundo plano",
+                  desc = "Desliga a busca constante por redes Wi-Fi e dispositivos Bluetooth. Desativar religa.",
+                  on = listOf(
+                      "settings put global wifi_scan_always_enabled 0",
+                      "settings put global ble_scan_always_enabled 0"
+                  ),
+                  off = listOf(
+                      "settings put global wifi_scan_always_enabled 1",
+                      "settings put global ble_scan_always_enabled 1"
+                  ),
+                  check = "settings get global wifi_scan_always_enabled",
+                  expect = "0"
+              ),
+              Opt(
+                  id = "dns",
+                  title = "DNS privado (dns.google)",
+                  desc = "Usa DNS privado com dns.google. Desativar volta para o modo Automático.",
+                  on = listOf(
+                      "settings put global private_dns_mode hostname",
+                      "settings put global private_dns_specifier dns.google"
+                  ),
+                  off = listOf(
+                      "settings put global private_dns_mode opportunistic"
+                  ),
+                  check = "settings get global private_dns_mode",
+                  expect = "hostname"
+              ),
+              Opt(
+                  id = "refresh",
+                  title = "Forçar taxa de atualização de 90Hz",
+                  desc = "Só funciona em telas de 90Hz e pode variar conforme a marca. Desativar remove o ajuste.",
+                  on = listOf(
+                      "settings put system min_refresh_rate 90.0",
+                      "settings put system peak_refresh_rate 90.0"
+                  ),
+                  off = listOf(
+                      "settings delete system min_refresh_rate",
+                      "settings delete system peak_refresh_rate"
+                  ),
+                  check = "settings get system min_refresh_rate",
+                  expect = "90.0"
+              ),
+              Opt(
+                  id = "compile",
+                  title = "Compilar apps (speed-profile)",
+                  desc = "Pré-compila os apps para abrirem mais rápido. Demora alguns minutos. Desativar restaura a compilação padrão.",
+                  on = listOf("cmd package compile -m speed-profile -a"),
+                  off = listOf("cmd package compile --reset -a"),
+                  heavy = true
+              )
+          )
+          TM_FIM_7
+          mkdir -p "$(dirname 'app/src/main/java/com/tm/otimizador/MainActivity.kt')"
+          cat > 'app/src/main/java/com/tm/otimizador/MainActivity.kt' <<'TM_FIM_8'
+          package com.tm.otimizador
+
+          import android.app.Activity
+          import android.content.pm.PackageManager
+          import android.graphics.Color
+          import android.graphics.Typeface
+          import android.graphics.drawable.GradientDrawable
+          import android.os.Bundle
+          import android.os.Handler
+          import android.os.Looper
+          import android.view.Gravity
+          import android.view.ViewGroup
+          import android.widget.Button
+          import android.widget.LinearLayout
+          import android.widget.ScrollView
+          import android.widget.Switch
+          import android.widget.TextView
+          import android.widget.Toast
+          import java.util.concurrent.Executors
+          import rikka.shizuku.Shizuku
+
+          class MainActivity : Activity() {
+
+              private val ui = Handler(Looper.getMainLooper())
+              private val worker = Executors.newSingleThreadExecutor()
+              private val prefs by lazy { getSharedPreferences("opts", MODE_PRIVATE) }
+
+              private val switches = LinkedHashMap<String, Switch>()
+              private val actionButtons = ArrayList<Button>()
+              private lateinit var status: TextView
+              private lateinit var permButton: Button
+              private lateinit var logView: TextView
+
+              private var suppress = false
+              private var connected = false
+
+              private val binderReceived = Shizuku.OnBinderReceivedListener { ui.post { refreshState() } }
+              private val binderDead = Shizuku.OnBinderDeadListener { ui.post { refreshState() } }
+              private val permResult = Shizuku.OnRequestPermissionResultListener { _, _ -> ui.post { refreshState() } }
+
+              // ---------------------------------------------------------------- ciclo de vida
+
+              override fun onCreate(savedInstanceState: Bundle?) {
+                  super.onCreate(savedInstanceState)
+                  window.statusBarColor = Color.parseColor("#0F172A")
+                  window.navigationBarColor = Color.parseColor("#0F172A")
+                  buildUi()
+                  Shizuku.addBinderReceivedListenerSticky(binderReceived)
+                  Shizuku.addBinderDeadListener(binderDead)
+                  Shizuku.addRequestPermissionResultListener(permResult)
+              }
+
+              override fun onResume() {
+                  super.onResume()
+                  refreshState()
+              }
+
+              override fun onDestroy() {
+                  Shizuku.removeBinderReceivedListener(binderReceived)
+                  Shizuku.removeBinderDeadListener(binderDead)
+                  Shizuku.removeRequestPermissionResultListener(permResult)
+                  worker.shutdown()
+                  super.onDestroy()
+              }
+
+              // ---------------------------------------------------------------- Shizuku
+
+              private fun running(): Boolean {
+                  return try {
+                      Shizuku.pingBinder()
+                  } catch (t: Throwable) {
+                      false
+                  }
+              }
+
+              private fun granted(): Boolean {
+                  if (!running()) return false
+                  return try {
+                      Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+                  } catch (t: Throwable) {
+                      false
+                  }
+              }
+
+              private fun onPermClick() {
+                  if (!running()) {
+                      val intent = packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
+                      if (intent != null) {
+                          startActivity(intent)
+                      } else {
+                          toast("Shizuku não está instalado. Instale e inicie o serviço.")
+                      }
+                      return
+                  }
+                  try {
+                      if (Shizuku.shouldShowRequestPermissionRationale()) {
+                          toast("Permissão negada. Libere o TM Otimizador dentro do app Shizuku.")
+                      } else {
+                          Shizuku.requestPermission(1001)
+                      }
+                  } catch (t: Throwable) {
+                      toast("Erro ao pedir permissão: ${t.message}")
+                  }
+              }
+
+              /** Executa um comando de shell com a permissão do Shizuku. Retorna (código, saída). */
+              private fun exec(cmd: String): Pair<Int, String> {
+                  return try {
+                      val m = Shizuku::class.java.getDeclaredMethod(
+                          "newProcess",
+                          Array<String>::class.java,
+                          Array<String>::class.java,
+                          String::class.java
+                      )
+                      m.isAccessible = true
+                      val p = m.invoke(null, arrayOf("sh", "-c", "($cmd) 2>&1"), null, null) as Process
+                      val out = p.inputStream.bufferedReader().readText()
+                      val code = p.waitFor()
+                      Pair(code, out.trim())
+                  } catch (t: Throwable) {
+                      Pair(-1, t.cause?.message ?: t.message ?: t.toString())
+                  }
+              }
+
+              // ---------------------------------------------------------------- estado
+
+              private fun refreshState() {
+                  val run = running()
+                  connected = granted()
+                  when {
+                      !run -> {
+                          status.text = "Shizuku não está em execução"
+                          status.setTextColor(Color.parseColor("#FBBF24"))
+                          permButton.text = "Abrir o Shizuku"
+                          permButton.isEnabled = true
+                      }
+                      !connected -> {
+                          status.text = "Shizuku ativo, falta a permissão"
+                          status.setTextColor(Color.parseColor("#FBBF24"))
+                          permButton.text = "Conceder permissão"
+                          permButton.isEnabled = true
+                      }
+                      else -> {
+                          status.text = "Shizuku conectado ✔"
+                          status.setTextColor(Color.parseColor("#34D399"))
+                          permButton.text = "Conectado"
+                          permButton.isEnabled = false
+                      }
+                  }
+                  permButton.alpha = if (permButton.isEnabled) 1f else 0.4f
+                  setBusy(false)
+                  if (connected) syncStates()
+              }
+
+              /** Lê o estado real de cada otimização no aparelho e ajusta as chaves. */
+              private fun syncStates() {
+                  worker.execute {
+                      for (opt in OPTS) {
+                          val saved = prefs.getBoolean(opt.id, false)
+                          val chk = opt.check
+                          var state = saved
+                          if (chk != null) {
+                              val r = exec(chk)
+                              if (r.first == 0) state = (r.second.trim() == opt.expect)
+                          }
+                          ui.post { setSwitch(opt.id, state) }
+                      }
+                  }
+              }
+
+              private fun setSwitch(id: String, value: Boolean) {
+                  val s = switches[id] ?: return
+                  suppress = true
+                  s.isChecked = value
+                  suppress = false
+              }
+
+              private fun setBusy(busy: Boolean) {
+                  val enabled = !busy && connected
+                  for (s in switches.values) s.isEnabled = enabled
+                  for (b in actionButtons) {
+                      b.isEnabled = enabled
+                      b.alpha = if (enabled) 1f else 0.4f
+                  }
+              }
+
+              // ---------------------------------------------------------------- ações
+
+              /** Roda uma otimização (bloqueante, chamar fora da thread de UI). */
+              private fun runOpt(opt: Opt, enable: Boolean): Boolean {
+                  log((if (enable) "Ativando" else "Desativando") + ": " + opt.title + "…")
+                  val cmds = if (enable) opt.on else opt.off
+                  val r = exec(cmds.joinToString(" && "))
+                  return if (r.first == 0) {
+                      prefs.edit().putBoolean(opt.id, enable).apply()
+                      log("✔ pronto" + snip(r.second))
+                      true
+                  } else {
+                      log("✘ erro (" + r.first + "): " + r.second)
+                      false
+                  }
+              }
+
+              private fun onToggle(opt: Opt, checked: Boolean) {
+                  if (suppress) return
+                  if (!connected) {
+                      setSwitch(opt.id, !checked)
+                      toast("Conecte o Shizuku primeiro")
+                      return
+                  }
+                  setBusy(true)
+                  worker.execute {
+                      val ok = runOpt(opt, checked)
+                      ui.post {
+                          if (!ok) setSwitch(opt.id, !checked)
+                          setBusy(false)
+                      }
+                  }
+              }
+
+              private fun bulk(enable: Boolean) {
+                  if (!connected) {
+                      toast("Conecte o Shizuku primeiro")
+                      return
+                  }
+                  setBusy(true)
+                  worker.execute {
+                      for (opt in OPTS) {
+                          if (opt.heavy) continue
+                          val ok = runOpt(opt, enable)
+                          if (ok) ui.post { setSwitch(opt.id, enable) }
+                      }
+                      ui.post { setBusy(false) }
+                  }
+              }
+
+              private fun runAction(label: String, cmd: String) {
+                  if (!connected) {
+                      toast("Conecte o Shizuku primeiro")
+                      return
+                  }
+                  setBusy(true)
+                  worker.execute {
+                      log("$label…")
+                      val r = exec(cmd)
+                      if (r.first == 0) log("✔ concluído" + snip(r.second)) else log("✘ erro (" + r.first + "): " + r.second)
+                      ui.post { setBusy(false) }
+                  }
