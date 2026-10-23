@@ -14,7 +14,7 @@ jobs:
         run: |
           set -e
           base64 -d <<'TM_FIM' | tar xz
-          H4sIAMWT2moC/+19224jOZZgPfsrWDGFnlCVHJbkS2Ya6cyRbTnT07ZlSMrs3r6sQCkoKdJxm7jI
+          H4sIAHK+22oC/+19224jOZZgPfsrWDGFnlCVHJbkS2Ya6cyRbTnT07ZlSMrs3r6sQCkoKdJxm7jI
           dlYb2I+Yh3mYl8IA0+gF+qmwWGAf13/SX7LnkIwIxk2Ws7KyprEWqtJSkDwkD8+dhwzq+1uT2LJN
           Yx5Q02bGVRR+9Zk/Lfjs7ezwv/Ap/m1vd9rJd/G83d5rtb8ira++wCcOIxpA91/9//nx7XhuuSH5
           foPAxzJ1beo5BnXNwLNMg/q+bU1pZHmu1khreMHc+MCiSUChpXHlRbblJk2g2t3GhvwhobrUYaFP
@@ -195,6 +195,16 @@ jobs:
           else
             echo "Ícone não encontrado no repositório, usando o ícone padrão"
             cp app/src/main/res/drawable/ic_fallback.xml app/src/main/res/mipmap-nodpi/ic_launcher.xml
+          fi
+
+      - name: Configurar assinatura
+        run: |
+          mkdir -p "$HOME/.android"
+          if [ -f debug.keystore ]; then
+            cp debug.keystore "$HOME/.android/debug.keystore"
+            echo "Usando a chave de assinatura fixa"
+          else
+            echo "Chave fixa não encontrada, usando chave temporária"
           fi
 
       - uses: actions/setup-java@v4
